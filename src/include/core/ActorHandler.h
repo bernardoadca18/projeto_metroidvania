@@ -7,11 +7,12 @@
 
 class ActorHandler
 {
-    public:
+    private:
         Player playerActor;
         AnimationRenderer playerActorIdleAnimationRenderer;
         AnimationRenderer playerActorMovingAnimationRenderer;
         
+    public:
         ActorHandler() {};
         ~ActorHandler() {};
         

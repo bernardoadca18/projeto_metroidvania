@@ -7,28 +7,39 @@
 
 class Actor
 {
+    protected:
+        std::vector<AnimationRenderer> animationRenderers;
+    
     private:
         int animationState;
         int animationStatesCount;
         float movementSpeed;
         float positionX;
         float positionY;
-
         bool isMoving;
 
+        int collisionWidth;
+        int collisionHeight;
+
+        // Variáveis de gravidade/colisao
+        int layer;
+        bool hasGravity;
+        float gravity;
+        float velocityY;
+        Rectangle collider;
+
     public:
-        std::vector<AnimationRenderer> animationRenderers;
         Actor();
         Actor(float positionX, float positionY);
-        ~Actor() { this->destroy(); };
+        ~Actor() { };
 
-        void init(float movementSpeed);
-        void update();
+        void init(float movementSpeed, int layer, bool hasGravity = true, float gravity = 9.8f);
+        void update(std::vector<Actor>& actors);
         void draw();
-        void destroy();
+        void applyGravity();
+        bool checkCollision(Actor& other);
 
         void addAnimationRenderer(AnimationRenderer animationRenderer);
-
         void transformPositionX(float amount, float signal);
 
         // Getters
@@ -36,8 +47,11 @@ class Actor
         float getPositionX() const;
         float getPositionY() const;
         float getMovementSpeed() const;
-        AnimationRenderer currentAnimationRenderer;
         bool getMoving();
+
+        int getLayer() const;
+        bool getHasGravity() const;
+        Rectangle getCollider() const;
 
         // Setters
         void setAnimationState(int animationState);
@@ -46,6 +60,11 @@ class Actor
         void setPositionX(float positionX);
         void setPositionY(float positionY);
         void setMoving(bool isMoving);
+
+        void setLayer(int layer);
+        void setHasGravity(bool hasGravity);
+        void setGravity(float gravity);
+        void setCollider(Rectangle collider);
 };
 
 #endif // ACTOR_H

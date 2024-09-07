@@ -1,5 +1,6 @@
 #include "Actor.h"
 #include "stdio.h"
+#include <vector>
 
 
 Actor::Actor()
@@ -14,15 +15,27 @@ Actor::Actor(float positionX, float positionY)
     this->positionY = positionY;
 }
 
-void Actor::init(float movementSpeed)
+void Actor::init(float movementSpeed, int layer, bool hasGravity = true, float gravity = 9.8f)
 {
     this->animationState =  0;
     this->animationStatesCount = 1;
     this->movementSpeed = movementSpeed;
+    this->collider = (Rectangle){this->positionX, this->positionY, 1.0f, 1.0f};
 }
 
-void Actor::update()
+void Actor::update(std::vector<Actor>& actors)
 {
+    this->applyGravity();
+
+    for (Actor& other : actors)
+    {
+        if (&other != this && this->checkCollision(other))
+        {
+
+            this->velocityY = 0;
+        }
+    }
+
     this->animationRenderers[this->animationState].update();
 }
 
@@ -31,7 +44,24 @@ void Actor::draw()
     this->animationRenderers[this->animationState].draw((Vector2){this->positionX, this->positionY});
 }
 
-void Actor::destroy() {}
+void Actor::applyGravity()
+{
+    if (this->hasGravity)
+    {
+        this->velocityY += this->gravity * GetFrameTime();
+        this->positionY += this->velocityY;
+    }
+}
+
+bool Actor::checkCollision(Actor& other)
+{
+    // Só verifica colisões em layers compatíveis
+    if (this->layer == other.getLayer())
+    {
+        return CheckCollisionRecs(this->collider, other.getCollider());
+    }
+    return false;
+}
 
 void Actor::addAnimationRenderer(AnimationRenderer animationRenderer)
 {

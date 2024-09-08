@@ -11,12 +11,14 @@ class Actor
         std::vector<AnimationRenderer> animationRenderers;
     
     private:
+        int spriteRenderSize;
         int animationState;
         int animationStatesCount;
         float movementSpeed;
         float positionX;
         float positionY;
         bool isMoving;
+        bool isAnimated;
 
         int collisionWidth;
         int collisionHeight;
@@ -26,21 +28,32 @@ class Actor
         bool hasGravity;
         float gravity;
         float velocityY;
+        float colliderWidth;
+        float colliderHeight;
+        float colliderOffsetX;
+        float colliderOffsetY;
         Rectangle collider;
 
     public:
         Actor();
         Actor(float positionX, float positionY);
-        ~Actor() { };
+        ~Actor() {};
 
-        void init(float movementSpeed, int layer, bool hasGravity = true, float gravity = 9.8f);
-        void update(std::vector<Actor>& actors);
+        void init(float movementSpeed, int layer, bool hasGravity, float gravity, const bool isAnimated, float positionX, float positionY, float colliderWidth, float colliderHeight, int spriteRenderSize);
+        virtual void update(std::vector<Actor*>& actors);
+        void updateCollider();
         void draw();
+        void drawSprite();
         void applyGravity();
         bool checkCollision(Actor& other);
 
         void addAnimationRenderer(AnimationRenderer animationRenderer);
         void transformPositionX(float amount, float signal);
+        void transformPositionY(float amount, float signal);
+        //void stateHandler();
+
+        // Debug
+        void drawDebugCollider();
 
         // Getters
         int getAnimationState() const;
@@ -52,10 +65,11 @@ class Actor
         int getLayer() const;
         bool getHasGravity() const;
         Rectangle getCollider() const;
+        float getVelocityY() const;
 
         // Setters
         void setAnimationState(int animationState);
-        void setAnimationRenderer();
+        //void setAnimationRenderer();
         void setPosition(float positionX, float positionY);
         void setPositionX(float positionX);
         void setPositionY(float positionY);
@@ -64,7 +78,9 @@ class Actor
         void setLayer(int layer);
         void setHasGravity(bool hasGravity);
         void setGravity(float gravity);
-        void setCollider(Rectangle collider);
+        void setCollider(int colliderWidth, int colliderHeight);
+        void setCollider(float colliderWidth, float colliderHeight);
+        
 };
 
 #endif // ACTOR_H

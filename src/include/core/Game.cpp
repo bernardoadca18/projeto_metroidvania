@@ -35,6 +35,8 @@ void Game::init()
 
     // Actors
     this->actorHandler.actorInitHandler();
+
+    this->raylibInitialized = true;
 }
 
 void Game::gameLoop()
@@ -97,6 +99,11 @@ int Game::getFramesCounter() const
 bool Game::getGamePaused() const
 {
     return this->gamePaused;
+}
+
+ActorHandler Game::getActorHandler() const
+{
+    return this->actorHandler;
 }
 
 

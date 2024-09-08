@@ -24,6 +24,7 @@ class Game
         int targetFPS;
         int framesCounter;
         bool gamePaused;
+        bool raylibInitialized;
 
         void updateGame();
         void updateDraw();
@@ -42,6 +43,7 @@ class Game
         int getTargetFPS() const;
         int getFramesCounter() const;
         bool getGamePaused() const;
+        ActorHandler getActorHandler() const ;
 
         // Setters
         void setScreen(GameScreen screen);

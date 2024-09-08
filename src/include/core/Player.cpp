@@ -1,4 +1,6 @@
 #include "Player.h"
+#include "Game.h"
+#include <iostream>
 
 void Player::handleInput()
 {
@@ -18,11 +20,13 @@ void Player::handleInput()
     }
 }
 
-void Player::update() 
+void Player::update(std::vector<Actor*> & actors) 
 {
     this->handleInput();
+    Actor::update(actors);
     this->stateHandler();
     this->animationRenderers[this->getAnimationState()].update();
+    std::cout << "player update: posX=" << this->getPositionX() << ", posY=" << this->getPositionY() << ", velY=" << this->getVelocityY() << std::endl;
 }
 
 void Player::stateHandler()

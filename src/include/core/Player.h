@@ -14,7 +14,7 @@ class Player : public Actor
         ~Player() {};
 
         void handleInput();
-        void update();
+        void update(std::vector<Actor*> & actors) override;
         void stateHandler();
 };
 

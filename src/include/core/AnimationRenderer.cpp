@@ -102,6 +102,12 @@ void AnimationRenderer::setFrameRec()
     this->frameRec = {0.0f, 0.0f, ((float)textureWidth)/framesCount, float(textureHeight)};
 }
 
+void AnimationRenderer::setPosition(float posX, float posY)
+{
+    this->frameRec.x = posX;
+    this->frameRec.y = posY;
+}
+
 // Getters
 char* AnimationRenderer::getSprshMainCharRunningPath()
 {
@@ -151,6 +157,11 @@ Rectangle AnimationRenderer::getFrameRec()
 Texture2D AnimationRenderer::getTexture()
 {
     return this->sprsh_main_char_running.sprsh_file;
+}
+
+Vector2 AnimationRenderer::getPosition()
+{
+    return Vector2{this->frameRec.x, this->frameRec.y};
 }
 
 // Texture reloader

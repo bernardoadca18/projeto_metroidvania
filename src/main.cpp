@@ -1,7 +1,7 @@
 #include "include/core/Game.h"
 
-const int BASE_SCREEN_WIDTH = 640;
-const int BASE_SCREEN_HEIGHT = 360;
+const int BASE_SCREEN_WIDTH =  1280;//640;
+const int BASE_SCREEN_HEIGHT = 720;//360;
 
 int main(int argc, char const *argv[])
 {

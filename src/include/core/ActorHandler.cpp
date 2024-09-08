@@ -3,19 +3,32 @@
 
 void ActorHandler::actorInitHandler()
 {
-    this->playerActorIdleAnimationRenderer.init("src/assets/sprites/characters/main_character/sprsh_char_idle.png", 110.0f, 20.0f, 64, 1);
-    this->playerActorMovingAnimationRenderer.init("src/assets/sprites/characters/main_character/sprsh_char_running.png", 110.0f, 20.0f, 64, 15);
-    playerActor.init(2.5f);
+    int playerSpriteSize {64};
+
+    this->playerActorIdleAnimationRenderer.init("src/assets/sprites/characters/main_character/spr_main_char_idle.png", 110.0f, 20.0f, playerSpriteSize, 5);
+    this->playerActorMovingAnimationRenderer.init("src/assets/sprites/characters/main_character/spr_main_char_running.png", 110.0f, 20.0f, playerSpriteSize, 4);
+
+    playerActor.init(2.5f, 0, false, 9.8f, true, 0.0f, 0.0f, 16.0f, 55.0f, playerSpriteSize);
+
     playerActor.addAnimationRenderer(this->playerActorIdleAnimationRenderer);
     playerActor.addAnimationRenderer(this->playerActorMovingAnimationRenderer);
+
+
+    actors.push_back(&playerActor);
 }
 
 void ActorHandler::actorUpdateHandler()
 {
-    playerActor.update();
+    for (Actor* actor : actors)
+    {
+        actor->update(actors);
+    }
 }
 
 void ActorHandler::actorDrawHandler()
 {
-    playerActor.draw();
+    for (Actor* actor : actors)
+    {
+        actor->draw();
+    }
 }

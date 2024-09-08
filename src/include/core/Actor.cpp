@@ -1,7 +1,6 @@
 #include "Actor.h"
-#include "stdio.h"
 #include <vector>
-
+#include <iostream>
 
 Actor::Actor()
 {
@@ -9,29 +8,36 @@ Actor::Actor()
     this->positionY = 0.0f;
 }
 
-Actor::Actor(float positionX, float positionY)
-{
-    this->positionX = positionX;
-    this->positionY = positionY;
-}
-
-void Actor::init(float movementSpeed, int layer, bool hasGravity = true, float gravity = 9.8f)
+void Actor::init(float movementSpeed, int layer, bool hasGravity, float gravity, const bool isAnimated, float positionX, float positionY, float colliderWidth, float colliderHeight, int spriteRenderSize)
 {
     this->animationState =  0;
     this->animationStatesCount = 1;
     this->movementSpeed = movementSpeed;
-    this->collider = (Rectangle){this->positionX, this->positionY, 1.0f, 1.0f};
+    this->spriteRenderSize = spriteRenderSize;
+    this->layer = layer;
+    this->hasGravity = hasGravity;
+    this->gravity = gravity;
+    this->isAnimated = isAnimated;
+    this->positionX = positionX;
+    this->positionY = positionY;
+    this->colliderWidth = colliderWidth;
+    this->colliderHeight = colliderHeight;
+
+    this->colliderOffsetX = this->colliderWidth;
+
+    this->collider = (Rectangle){this->positionX, this->positionY, this->colliderWidth, this->colliderHeight};
 }
 
-void Actor::update(std::vector<Actor>& actors)
+void Actor::update(std::vector<Actor*>& actors)
 {
     this->applyGravity();
+    this->updateCollider();
+    //this->stateHandler();
 
-    for (Actor& other : actors)
+    for (Actor* other : actors)
     {
-        if (&other != this && this->checkCollision(other))
+        if (other != this && this->checkCollision(*other))
         {
-
             this->velocityY = 0;
         }
     }
@@ -42,14 +48,39 @@ void Actor::update(std::vector<Actor>& actors)
 void Actor::draw()
 {
     this->animationRenderers[this->animationState].draw((Vector2){this->positionX, this->positionY});
+
+    drawDebugCollider();
 }
+
+void Actor::updateCollider()
+{
+    collider.x = this->getPositionX();
+    collider.y = this->getPositionY();
+}
+
+void Actor::drawSprite()
+{
+
+}
+
+//void Actor::stateHandler()
+//{
+//    if (this->getMoving())
+//    {
+//        this->setAnimationState(1);
+//    }
+//    else
+//    {
+//        this->setAnimationState(0);
+//    }
+//}
 
 void Actor::applyGravity()
 {
     if (this->hasGravity)
     {
         this->velocityY += this->gravity * GetFrameTime();
-        this->positionY += this->velocityY;
+        this->transformPositionY((this->velocityY), 1.0f);
     }
 }
 
@@ -73,6 +104,24 @@ void Actor::transformPositionX(float amount, float signal)
     this->positionX += (amount)*(signal);
 }
 
+void Actor::transformPositionY(float amount, float signal)
+{
+    this->positionY += (amount)*(signal);
+}
+
+void Actor::drawDebugCollider()
+{
+    DrawRectangleLinesEx(this->collider, 1, GREEN);
+    Color greenTransparent = GREEN;
+    greenTransparent.a = 100; // Define a transparência
+    DrawRectangleRec(this->collider, greenTransparent);
+}
+
+
+
+
+
+
 // Getters
 int Actor::getAnimationState() const
 {
@@ -81,7 +130,7 @@ int Actor::getAnimationState() const
 
 float Actor::getPositionX() const
 {
-    return this->positionY;
+    return this->positionX;
 }
 
 float Actor::getPositionY() const
@@ -99,6 +148,25 @@ bool Actor::getMoving()
     return this->isMoving;
 }
 
+int Actor::getLayer() const
+{
+    return this->layer;
+}
+
+bool Actor::getHasGravity() const
+{
+    return this->hasGravity;
+}
+
+Rectangle Actor::getCollider() const
+{
+    return this->collider;
+}
+
+float Actor::getVelocityY() const
+{
+    return this->velocityY;
+}
 
 // Setters
 void Actor::setAnimationState(int animationState)
@@ -126,5 +194,31 @@ void Actor::setMoving(bool isMoving)
 {
     this->isMoving = isMoving;
 }
+
+void Actor::setCollider(int colliderWidth, int colliderHeight)
+{
+    this->collider = (Rectangle){this->positionX, this->positionY, (float)colliderWidth, (float)colliderHeight};
+}
+
+void Actor::setCollider(float colliderWidth, float colliderHeight)
+{
+    this->collider = (Rectangle){this->positionX, this->positionY, colliderWidth, colliderHeight};
+}
+
+void Actor::setLayer(int layer)
+{
+    this->layer = layer;
+}
+
+void Actor::setHasGravity(bool hasGravity)
+{
+    this->hasGravity = hasGravity;
+}
+
+void Actor::setGravity(float gravity)
+{
+    this->gravity = gravity;
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

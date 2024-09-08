@@ -8,9 +8,14 @@
 class ActorHandler
 {
     private:
+        std::vector<Actor*> actors;
+        
         Player playerActor;
         AnimationRenderer playerActorIdleAnimationRenderer;
         AnimationRenderer playerActorMovingAnimationRenderer;
+
+        Actor groundPlaceholder;
+        
         
     public:
         ActorHandler() {};

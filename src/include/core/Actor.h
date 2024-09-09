@@ -19,7 +19,8 @@ class Actor
         float positionY;
         bool isMoving;
         bool isAnimated;
-
+        float scaleX;
+        float scaleY;
         int collisionWidth;
         int collisionHeight;
 
@@ -39,7 +40,7 @@ class Actor
         Actor(float positionX, float positionY);
         ~Actor() {};
 
-        void init(float movementSpeed, int layer, bool hasGravity, float gravity, const bool isAnimated, float positionX, float positionY, float colliderWidth, float colliderHeight, int spriteRenderSize);
+        void init(float movementSpeed, int layer, bool hasGravity, float gravity, const bool isAnimated, float positionX, float positionY, float colliderWidth, float colliderHeight, float scaleX, float scaleY, int spriteRenderSize, float colliderOffsetX, float colliderOffsetY);
         virtual void update(std::vector<Actor*>& actors);
         void updateCollider();
         void draw();
@@ -66,6 +67,8 @@ class Actor
         bool getHasGravity() const;
         Rectangle getCollider() const;
         float getVelocityY() const;
+        float getScaleX() const;
+        float getScaleY() const;
 
         // Setters
         void setAnimationState(int animationState);
@@ -80,6 +83,8 @@ class Actor
         void setGravity(float gravity);
         void setCollider(int colliderWidth, int colliderHeight);
         void setCollider(float colliderWidth, float colliderHeight);
+        void setScaleX(float scaleX);
+        void setScaleY(float scaleY);
         
 };
 

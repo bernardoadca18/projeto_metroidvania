@@ -6,9 +6,27 @@ Actor::Actor()
 {
     this->positionX = 0.0f;
     this->positionY = 0.0f;
+
+    this->movementSpeed = 0.0f;
+    this->spriteRenderSize = 0;
+    this->layer = 0;
+    this->hasGravity = false;
+    this->gravity = 0.0f;
+    this->isAnimated = false;
+    this->scaleX = 1.0f;
+    this->scaleY = 1.0f;
+    this->colliderWidth = 0.0f;
+    this->colliderHeight = 0.0f;
+    this->colliderOffsetX = 0.0f;
+    this->collider = {0.0f, 0.0f, 0.0f, 0.0f};
+    this->animationState = 0;
+    this->animationStatesCount = 1;
+    this->velocityY = 0.0f;
+    this->isMoving = false;
+    this->animationRenderers.clear();
 }
 
-void Actor::init(float movementSpeed, int layer, bool hasGravity, float gravity, const bool isAnimated, float positionX, float positionY, float colliderWidth, float colliderHeight, int spriteRenderSize)
+void Actor::init(float movementSpeed, int layer, bool hasGravity, float gravity, const bool isAnimated, float positionX, float positionY, float colliderWidth, float colliderHeight, float scaleX, float scaleY, int spriteRenderSize, float colliderOffsetX, float colliderOffsetY)
 {
     this->animationState =  0;
     this->animationStatesCount = 1;
@@ -20,12 +38,18 @@ void Actor::init(float movementSpeed, int layer, bool hasGravity, float gravity,
     this->isAnimated = isAnimated;
     this->positionX = positionX;
     this->positionY = positionY;
+    this->scaleX = scaleX;
+    this->scaleY = scaleY;
     this->colliderWidth = colliderWidth;
     this->colliderHeight = colliderHeight;
 
-    this->colliderOffsetX = this->colliderWidth;
+    this->colliderOffsetX = colliderOffsetX;
+    this->colliderOffsetY = colliderOffsetY;
 
-    this->collider = (Rectangle){this->positionX, this->positionY, this->colliderWidth, this->colliderHeight};
+    this->colliderOffsetX *= this->scaleX;
+    this->colliderOffsetY *= this->scaleY;
+
+    this->collider = (Rectangle){this->positionX, this->positionY, this->colliderWidth*scaleX, this->colliderHeight*scaleY};
 }
 
 void Actor::update(std::vector<Actor*>& actors)
@@ -47,21 +71,27 @@ void Actor::update(std::vector<Actor*>& actors)
 
 void Actor::draw()
 {
-    this->animationRenderers[this->animationState].draw((Vector2){this->positionX, this->positionY});
+    this->animationRenderers[this->animationState].draw((Vector2){this->positionX, this->positionY}, this->scaleX, this->scaleY, this->positionX, this->positionY);
 
     drawDebugCollider();
 }
 
 void Actor::updateCollider()
 {
-    collider.x = this->getPositionX();
-    collider.y = this->getPositionY();
+
+
+    collider.x = this->getPositionX() - this->colliderOffsetX;// - this->colliderOffsetX;// + this->colliderOffsetX;
+    collider.y = this->getPositionY() - this->colliderOffsetY;// + this->colliderOffsetY;
+
+    collider.width = this->colliderWidth * this->scaleX;
+    collider.height = this->colliderHeight * this->scaleY;
 }
 
 void Actor::drawSprite()
 {
 
 }
+
 
 //void Actor::stateHandler()
 //{
@@ -168,6 +198,16 @@ float Actor::getVelocityY() const
     return this->velocityY;
 }
 
+float Actor::getScaleX() const
+{
+    return this->scaleX;
+}
+
+float Actor::getScaleY() const
+{
+    return this->scaleY;
+}
+
 // Setters
 void Actor::setAnimationState(int animationState)
 {
@@ -220,5 +260,14 @@ void Actor::setGravity(float gravity)
     this->gravity = gravity;
 }
 
+void Actor::setScaleX(float scaleX)
+{
+    this->scaleX = scaleX;
+}
+
+void Actor::setScaleY(float scaleY)
+{
+    this->scaleY = scaleY;
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

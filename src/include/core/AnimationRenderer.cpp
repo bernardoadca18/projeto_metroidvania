@@ -1,7 +1,7 @@
 #include "AnimationRenderer.h"
 #include "raylib.h"
 
-void AnimationRenderer::init(char* sprsh_main_char_running_path, float posX, float posY, int spriteSize, int framesSpeed)
+void AnimationRenderer::init(char* sprsh_main_char_running_path, int spriteSize, int framesSpeed)
 {
     this->sprsh_main_char_running_path = sprsh_main_char_running_path;
     this->spriteSize = spriteSize;
@@ -41,9 +41,11 @@ void AnimationRenderer::update()
     }
 }
 
-void AnimationRenderer::draw(Vector2 position)
+void AnimationRenderer::draw(Vector2 position, float scaleX, float scaleY, float positionX, float positionY)
 {
-    DrawTextureRec(this->sprsh_main_char_running.sprsh_file, this->frameRec, position, WHITE);
+    Rectangle destRect {positionX, positionY, frameRec.width*scaleX, frameRec.height*scaleY};
+    
+    DrawTexturePro(this->sprsh_main_char_running.sprsh_file,  this->frameRec, destRect, {destRect.width*0.5f, destRect.height*0.5f}, 0, WHITE);
 }
 
 // Setters

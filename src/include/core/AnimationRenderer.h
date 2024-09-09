@@ -30,11 +30,11 @@ class AnimationRenderer
 
 
     public:
-        void init(char* sprsh_main_char_running_path, float posX, float posY, int spriteSize, int framesSpeed);
+        void init(char* sprsh_main_char_running_path, int spriteSize, int framesSpeed);
 
         void update();
 
-        void draw(Vector2 position);
+        void draw(Vector2 position, float scaleX, float scaleY, float positionX, float positionY);
 
         AnimationRenderer() {};
 

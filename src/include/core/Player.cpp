@@ -8,11 +8,13 @@ void Player::handleInput()
     {
         this->transformPositionX(this->getMovementSpeed(), 1.0f);
         this->setMoving(true);
+        this->setFlipX(false);
     }
     else if (keymap.getMoveLeftKey())
     {
         this->transformPositionX(this->getMovementSpeed(), -1.0f);
         this->setMoving(true);
+        this->setFlipX(true);
     }
     else
     {

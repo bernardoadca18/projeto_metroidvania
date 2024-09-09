@@ -34,7 +34,7 @@ class AnimationRenderer
 
         void update();
 
-        void draw(Vector2 position, float scaleX, float scaleY, float positionX, float positionY);
+        void draw(Vector2 position, float scaleX, float scaleY, float positionX, float positionY, bool flipX);
 
         AnimationRenderer() {};
 

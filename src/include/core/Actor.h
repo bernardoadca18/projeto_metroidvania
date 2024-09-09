@@ -23,6 +23,7 @@ class Actor
         float scaleY;
         int collisionWidth;
         int collisionHeight;
+        bool flipX;
 
         // Variáveis de gravidade/colisao
         int layer;
@@ -69,6 +70,8 @@ class Actor
         float getVelocityY() const;
         float getScaleX() const;
         float getScaleY() const;
+        bool getFlipX() const;
+        
 
         // Setters
         void setAnimationState(int animationState);
@@ -85,7 +88,8 @@ class Actor
         void setCollider(float colliderWidth, float colliderHeight);
         void setScaleX(float scaleX);
         void setScaleY(float scaleY);
-        
+        void setFlipX(bool flipX);
+
 };
 
 #endif // ACTOR_H

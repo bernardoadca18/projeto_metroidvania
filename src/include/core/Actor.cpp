@@ -40,6 +40,7 @@ void Actor::init(float movementSpeed, int layer, bool hasGravity, float gravity,
     this->positionY = positionY;
     this->scaleX = scaleX;
     this->scaleY = scaleY;
+    this->flipX = false;
     this->colliderWidth = colliderWidth;
     this->colliderHeight = colliderHeight;
 
@@ -71,7 +72,7 @@ void Actor::update(std::vector<Actor*>& actors)
 
 void Actor::draw()
 {
-    this->animationRenderers[this->animationState].draw((Vector2){this->positionX, this->positionY}, this->scaleX, this->scaleY, this->positionX, this->positionY);
+    this->animationRenderers[this->animationState].draw((Vector2){this->positionX, this->positionY}, this->scaleX, this->scaleY, this->positionX, this->positionY, this->flipX);
 
     drawDebugCollider();
 }
@@ -208,6 +209,11 @@ float Actor::getScaleY() const
     return this->scaleY;
 }
 
+bool Actor::getFlipX() const
+{
+    return this->flipX;
+}
+
 // Setters
 void Actor::setAnimationState(int animationState)
 {
@@ -268,6 +274,11 @@ void Actor::setScaleX(float scaleX)
 void Actor::setScaleY(float scaleY)
 {
     this->scaleY = scaleY;
+}
+
+void Actor::setFlipX(bool flipX)
+{
+    this->flipX = flipX;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

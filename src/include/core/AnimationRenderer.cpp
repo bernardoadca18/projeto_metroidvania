@@ -41,11 +41,19 @@ void AnimationRenderer::update()
     }
 }
 
-void AnimationRenderer::draw(Vector2 position, float scaleX, float scaleY, float positionX, float positionY)
+void AnimationRenderer::draw(Vector2 position, float scaleX, float scaleY, float positionX, float positionY, bool flipX)
 {
     Rectangle destRect {positionX, positionY, frameRec.width*scaleX, frameRec.height*scaleY};
+    Rectangle invertedXRect {frameRec.x, frameRec.y, frameRec.width*-1.0f, frameRec.height};
     
-    DrawTexturePro(this->sprsh_main_char_running.sprsh_file,  this->frameRec, destRect, {destRect.width*0.5f, destRect.height*0.5f}, 0, WHITE);
+    if (flipX)
+    {
+        DrawTexturePro(this->sprsh_main_char_running.sprsh_file,  invertedXRect, destRect, {destRect.width*0.5f, destRect.height*0.5f}, 0, WHITE);
+    }
+    else
+    {
+        DrawTexturePro(this->sprsh_main_char_running.sprsh_file,  this->frameRec, destRect, {destRect.width*0.5f, destRect.height*0.5f}, 0, WHITE);
+    }
 }
 
 // Setters

@@ -2,7 +2,7 @@
 EXECUTABLE := main
 
 # Compilador e flags
-CXX := g++-12
+CXX := g++-14
 CXXFLAGS := -g -std=c++20 -w
 LDFLAGS := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 

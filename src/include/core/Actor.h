@@ -24,24 +24,29 @@ class Actor
         int collisionWidth;
         int collisionHeight;
         bool flipX;
+        bool colliding;
 
         // Variáveis de gravidade/colisao
         int layer;
         bool hasGravity;
         float gravity;
+        float velocityX;
         float velocityY;
         float colliderWidth;
         float colliderHeight;
         float colliderOffsetX;
         float colliderOffsetY;
+        Rectangle spriteRect;
         Rectangle collider;
+        Color colliderDebugColor;
+        Texture2D sprite;
 
     public:
         Actor();
         Actor(float positionX, float positionY);
         ~Actor() {};
 
-        void init(float movementSpeed, int layer, bool hasGravity, float gravity, const bool isAnimated, float positionX, float positionY, float colliderWidth, float colliderHeight, float scaleX, float scaleY, int spriteRenderSize, float colliderOffsetX, float colliderOffsetY);
+        void init(const char* spritePath, float movementSpeed, int layer, bool hasGravity, float gravity, const bool isAnimated, float positionX, float positionY, float colliderWidth, float colliderHeight, float scaleX, float scaleY, int spriteRenderSize, float colliderOffsetX, float colliderOffsetY, Color colliderDebugColor);
         virtual void update(std::vector<Actor*>& actors);
         void updateCollider();
         void draw();
@@ -55,7 +60,8 @@ class Actor
         //void stateHandler();
 
         // Debug
-        void drawDebugCollider();
+        void drawDebugCollider(Color colliderColor);
+        void drawPositionPoint(Color color);
 
         // Getters
         int getAnimationState() const;
@@ -67,10 +73,16 @@ class Actor
         int getLayer() const;
         bool getHasGravity() const;
         Rectangle getCollider() const;
+        float getVelocityX() const;
         float getVelocityY() const;
         float getScaleX() const;
         float getScaleY() const;
         bool getFlipX() const;
+        bool getIsAnimated() const;
+        Color getColliderDebugColor() const;
+
+
+        void applyCollision();
         
 
         // Setters
@@ -89,6 +101,10 @@ class Actor
         void setScaleX(float scaleX);
         void setScaleY(float scaleY);
         void setFlipX(bool flipX);
+        void setIsAnimated(bool isAnimated);
+        void setColliderDebugColor(Color colliderDebugColor);
+        void setVelocityX(float velocityX);
+        void setVelocityY(float velocityY);
 
 };
 

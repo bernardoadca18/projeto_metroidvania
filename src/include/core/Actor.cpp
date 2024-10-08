@@ -22,11 +22,12 @@ Actor::Actor()
     this->animationState = 0;
     this->animationStatesCount = 1;
     this->velocityY = 0.0f;
+    this->velocityX = 0.0f;
     this->isMoving = false;
     this->animationRenderers.clear();
 }
 
-void Actor::init(float movementSpeed, int layer, bool hasGravity, float gravity, const bool isAnimated, float positionX, float positionY, float colliderWidth, float colliderHeight, float scaleX, float scaleY, int spriteRenderSize, float colliderOffsetX, float colliderOffsetY)
+void Actor::init(const char* spritePath, float movementSpeed, int layer, bool hasGravity, float gravity, const bool isAnimated, float positionX, float positionY, float colliderWidth, float colliderHeight, float scaleX, float scaleY, int spriteRenderSize, float colliderOffsetX, float colliderOffsetY, Color colliderDebugColor)
 {
     this->animationState =  0;
     this->animationStatesCount = 1;
@@ -51,10 +52,15 @@ void Actor::init(float movementSpeed, int layer, bool hasGravity, float gravity,
     this->colliderOffsetY *= this->scaleY;
 
     this->collider = (Rectangle){this->positionX, this->positionY, this->colliderWidth*scaleX, this->colliderHeight*scaleY};
+    this->spriteRect = (Rectangle){0.0f, 0.0f, ((float)(this->spriteRenderSize)) * scaleX, ((float)(this->spriteRenderSize)) * scaleY};
+
+    this->sprite = LoadTexture(spritePath);
 }
 
 void Actor::update(std::vector<Actor*>& actors)
 {
+    //std::cout << "Updating actor at position: (" << this->positionX << ", " << this->positionY << ")" << std::endl;
+
     this->applyGravity();
     this->updateCollider();
     //this->stateHandler();
@@ -63,18 +69,33 @@ void Actor::update(std::vector<Actor*>& actors)
     {
         if (other != this && this->checkCollision(*other))
         {
-            this->velocityY = 0;
+            std::cout << "Colisão detectada entre os objetos nas posições: (" << this->positionX << ", " << this->positionY << ") e (" << other->getPositionX() << ", " << other->getPositionY() << ")" << std::endl;
+
+            
         }
     }
 
-    this->animationRenderers[this->animationState].update();
+    if (this->isAnimated && !this->animationRenderers.empty())
+    {
+        this->animationRenderers[this->animationState].update();
+    }
+
+    std::cout << "is colliding ? " << this->colliding << std::endl;
 }
 
 void Actor::draw()
 {
-    this->animationRenderers[this->animationState].draw((Vector2){this->positionX, this->positionY}, this->scaleX, this->scaleY, this->positionX, this->positionY, this->flipX);
+    if(this->isAnimated && !this->animationRenderers.empty())
+    {
+        this->animationRenderers[this->animationState].draw((Vector2){this->positionX, this->positionY}, this->scaleX, this->scaleY, this->positionX, this->positionY, this->flipX);
+    }
+    else
+    {
+        DrawTextureRec(this->sprite, this->spriteRect, (Vector2){this->positionX, this->positionY}, WHITE); 
+    }
 
-    drawDebugCollider();
+    drawDebugCollider(this->colliderDebugColor);
+    drawPositionPoint(GREEN);
 }
 
 void Actor::updateCollider()
@@ -117,12 +138,8 @@ void Actor::applyGravity()
 
 bool Actor::checkCollision(Actor& other)
 {
-    // Só verifica colisões em layers compatíveis
-    if (this->layer == other.getLayer())
-    {
-        return CheckCollisionRecs(this->collider, other.getCollider());
-    }
-    return false;
+    this->colliding = CheckCollisionRecs(this->collider, other.getCollider());
+    return CheckCollisionRecs(this->collider, other.getCollider());
 }
 
 void Actor::addAnimationRenderer(AnimationRenderer animationRenderer)
@@ -140,15 +157,17 @@ void Actor::transformPositionY(float amount, float signal)
     this->positionY += (amount)*(signal);
 }
 
-void Actor::drawDebugCollider()
+void Actor::drawDebugCollider(Color colliderColor)
 {
-    DrawRectangleLinesEx(this->collider, 1, GREEN);
-    Color greenTransparent = GREEN;
-    greenTransparent.a = 100; // Define a transparência
-    DrawRectangleRec(this->collider, greenTransparent);
+    DrawRectangleLinesEx(this->collider, 1, colliderColor);
+    Color colorTransparent = colliderColor;
+    colorTransparent.a = 100; // Define a transparência
+    DrawRectangleRec(this->collider, colorTransparent);
 }
 
-
+void Actor::drawPositionPoint(Color color) {
+    DrawPixel(static_cast<int>(this->positionX), static_cast<int>(this->positionY), color);
+}
 
 
 
@@ -194,6 +213,11 @@ Rectangle Actor::getCollider() const
     return this->collider;
 }
 
+float Actor::getVelocityX() const
+{
+    return this->velocityX;
+}
+
 float Actor::getVelocityY() const
 {
     return this->velocityY;
@@ -212,6 +236,11 @@ float Actor::getScaleY() const
 bool Actor::getFlipX() const
 {
     return this->flipX;
+}
+
+Color Actor::getColliderDebugColor() const
+{
+    return this->getColliderDebugColor();
 }
 
 // Setters
@@ -279,6 +308,31 @@ void Actor::setScaleY(float scaleY)
 void Actor::setFlipX(bool flipX)
 {
     this->flipX = flipX;
+}
+
+bool Actor::getIsAnimated() const 
+{
+    return isAnimated;
+}
+
+void Actor::setIsAnimated(bool isAnimated) 
+{
+    this->isAnimated = isAnimated;
+}
+
+void Actor::setColliderDebugColor(Color colliderDebugColor)
+{
+    this->colliderDebugColor = colliderDebugColor;
+}
+
+void Actor::setVelocityX(float velocityX)
+{
+    this->velocityX = velocityX;
+}
+
+void Actor::setVelocityY(float velocityY)
+{
+    this->velocityY = velocityY;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

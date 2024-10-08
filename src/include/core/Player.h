@@ -8,6 +8,7 @@ class Player : public Actor
 {
     private:
         Keymap keymap;
+        float horizontalInput {1.0f};
 
     public:
         Player() {};

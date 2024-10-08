@@ -1,6 +1,5 @@
 #include "ActorHandler.h"
 #include "Actor.h"
-#include <stdio.h>
 
 void ActorHandler::actorInitHandler()
 {
@@ -27,10 +26,10 @@ void ActorHandler::actorInitHandler()
 
     // Inicializando os renderers
     this->playerActorIdleAnimationRenderer.init("src/assets/sprites/characters/main_character/spr_main_char_idle.png", playerActorInfo.playerSpriteSize, 5);
-    this->playerActorMovingAnimationRenderer.init("src/assets/sprites/characters/main_character/spr_main_char_running.png", playerActorInfo.playerSpriteSize, 8);
+    this->playerActorMovingAnimationRenderer.init("src/assets/sprites/characters/main_character/spr_main_char_running.png", playerActorInfo.playerSpriteSize, 7);
 
     // Inicializando o playerActor (objeto que é responsável pelo controle do jogador, mesma coisa do actor normal praticamente, só que tem a função de input)
-    this->playerActor.init(playerActorInfo.playerMovementSpeed, playerActorInfo.playerLayer, playerActorInfo.playerHasGravity, playerActorInfo.playerGravity, playerActorInfo.playerIsAnimated, playerActorInfo.playerPositionX, playerActorInfo.playerPositionY, playerActorInfo.playerColliderWidth, playerActorInfo.playerColliderHeight, playerActorInfo.playerSpriteScaleX, playerActorInfo.playerSpriteScaleY, playerActorInfo.playerSpriteSize, playerActorInfo.playerColliderOffsetX, playerActorInfo.playerColliderOffsetY);
+    this->playerActor.init("src/assets/sprites/characters/main_character/spr_main_char.png",playerActorInfo.playerMovementSpeed, playerActorInfo.playerLayer, playerActorInfo.playerHasGravity, playerActorInfo.playerGravity, playerActorInfo.playerIsAnimated, playerActorInfo.playerPositionX, playerActorInfo.playerPositionY, playerActorInfo.playerColliderWidth, playerActorInfo.playerColliderHeight, playerActorInfo.playerSpriteScaleX, playerActorInfo.playerSpriteScaleY, playerActorInfo.playerSpriteSize, playerActorInfo.playerColliderOffsetX, playerActorInfo.playerColliderOffsetY, RED);
 
     // Adicionando os animationrenderers ao playeractor.
     playerActor.addAnimationRenderer(this->playerActorIdleAnimationRenderer);
@@ -38,6 +37,10 @@ void ActorHandler::actorInitHandler()
 
     // Adicionando o playerActor a lista de actors.
     actors.push_back(&playerActor);
+
+    this->groundPlaceholder.init("src/assets/sprites/placeholders/placeholder_ground.png", 0.0f, 0, 0, 0.0f, false, 380.0f, 300.0f, 32.0f, 32.0f, 1.0f, 1.0f, 32, 0.0f, 0.0f, RED);
+
+    actors.push_back(&groundPlaceholder);
 }
 
 void ActorHandler::actorUpdateHandler()
